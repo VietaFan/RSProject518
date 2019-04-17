@@ -116,16 +116,14 @@ def f2(user, F, N, S, r, alpha):
 
 
 t = 0.2
-alpha = 1.0
+# alpha = 1.0
 beta = 1.0
 gamma = 1.0
-a = 0.0001
+# a = 0.0001
 b = 0.2
 c = 0.0001
 
-
 u = get_user(2, 0.01)
-F = get_constraint_func(t,a,b,c,alpha,beta,gamma)
 m = 1000
 N_0 = 1000
 S_0 = 20000
@@ -135,24 +133,45 @@ Nvals = [0]*6
 Svals = [0]*6
 k = 0
 
-for f_gen, alpha in [(f2, 0), (f2, .1), (f2, .2), (f1, .1), (f1, .3), (f1, 1)]:
-    utils[k], Nvals[k], Svals[k] = sim_metric2(u, F, m, f_gen, N_0, S_0, alpha, make_plots=True)
-    k += 1
-    
-for j in range(1,3):
-    plt.figure(j)
-    plt.legend(['always max utility', 'max utility after 10%', 'max utility after 20%', 'weighted, exponent .1', 'weighted, exponent .3', 'weighted, exponent 1'])
-    plt.xlabel('user number')
-plt.figure(1)
-plt.ylabel('number of items rated')
-plt.figure(2)
-plt.ylabel('utility')
+util_main = []
 
-plt.figure(3)
-plt.bar(range(6), utils)
-plt.xticks(range(6), ['max after 0%', 'max after 10%', 'max after 20%', 'weighted .1', 'weighted .3', 'weighted 1.0'])
-plt.ylabel('total utility')
-nmin, nmax = 0, 40
-Nmin, Nmax = 0, 2000
-#make_plot(t,alpha,beta,gamma,a,b,c,nmin,nmax,Nmin,Nmax)
-plt.show()
+alpha_list = [.2, .6, 1.0, 1.4, 1.8, 2.2]
+a_list = [.00001, .00005, .0001, .0005, .001, .01]
+
+# SAM: just realized the problem of two alphas -- I was varying the alpha that goes into the constraint function
+# for the alphas in the inner-most loop, what do they represent?
+# I'm trying to vary alpha and a and then plot the result on a 3d plot, but I need some help piecing apart what does what?
+for alpha in alpha_list:
+    for a in a_list:
+        F = get_constraint_func(t,a,b,c,alpha,beta,gamma)
+        k = 0
+        for f_gen, alpha in [(f2, 0), (f2, .1), (f2, .2), (f1, .1), (f1, .3), (f1, 1)]:
+            utils[k], Nvals[k], Svals[k] = sim_metric2(u, F, m, f_gen, N_0, S_0, alpha, make_plots=False)
+            k += 1
+
+        util_main.append(utils)
+
+print(len(util_main))
+
+# for f_gen, alpha in [(f2, 0), (f2, .1), (f2, .2), (f1, .1), (f1, .3), (f1, 1)]:
+#     utils[k], Nvals[k], Svals[k] = sim_metric2(u, F, m, f_gen, N_0, S_0, alpha, make_plots=True)
+#     k += 1
+
+# # common labels to all plots
+# for j in range(1,3):
+#     plt.figure(j)
+#     plt.legend(['always max utility', 'max utility after 10%', 'max utility after 20%', 'weighted, exponent .1', 'weighted, exponent .3', 'weighted, exponent 1'])
+#     plt.xlabel('user number')
+# plt.figure(1)
+# plt.ylabel('number of items rated')
+# plt.figure(2)
+# plt.ylabel('utility')
+
+# plt.figure(3)
+# plt.bar(range(6), utils)
+# plt.xticks(range(6), ['max after 0%', 'max after 10%', 'max after 20%', 'weighted .1', 'weighted .3', 'weighted 1.0'])
+# plt.ylabel('total utility')
+# nmin, nmax = 0, 40
+# Nmin, Nmax = 0, 2000
+# #make_plot(t,alpha,beta,gamma,a,b,c,nmin,nmax,Nmin,Nmax)
+# plt.show()
