@@ -1,0 +1,15 @@
+weighted
+
+user_cost 0.01
+user_alpha 2.0
+cf_b 0.2
+cf_beta 1.0
+cf_c 0.0001
+cf_gamma 1.0
+cf_t 0.2
+N_0 1000
+S_0 20000
+num_users 1000
+cf_a 0.00001 0.00005 0.0001 0.0005 0.001 0.01
+cf_alpha 0.2 0.6 1.0 1.4 1.8 2.2
+weighting_exp 0.1 0.3 0.5 1.0 2.0
